@@ -24,6 +24,18 @@
   border-radius: 4px;
 }
 
+.todoList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.todoItem {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
 .addButton {
   border-radius: 4px;
   width: 60px;
@@ -45,5 +57,27 @@
   /* ボタン押下時のスタイル */
   &:active {
     background-color: rgb(0 0 0 / 40%);
+  }
+}
+
+.completeButton {
+  border-radius: 4px;
+  width: 60px;
+  height: 100%;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #008000; 
+  border: 1px solid rgb(0 128 0 / 20%);
+  cursor: pointer;
+    
+  /* ホバー時のスタイル */
+  &:hover {
+    background-color: rgb(0 128 0 / 70%);
+  }
+  
+  /* ボタン押下時のスタイル */
+  &:active {
+    background-color: rgb(0 128 0 / 40%);
   }
 }
