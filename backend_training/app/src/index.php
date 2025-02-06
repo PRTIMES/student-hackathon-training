@@ -17,7 +17,7 @@ $routes = [
     'GET' => [
         '#^/todos$#' => 'handleGetTodos',  // Match only `/todos` with no query params or other path
         '#^/health$#' => 'handleHealthCheck',
-        // TODO: 他のエンドポイントを追加
+        '#^/hogehoge$#' => 'handleHogeHoge',
     ],
     'POST' => [
         // TODO: 他のエンドポイントを追加
