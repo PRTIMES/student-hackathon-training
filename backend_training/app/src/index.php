@@ -1,6 +1,6 @@
 <?php
 require_once 'config.php'; // 設定ファイルを読み込み
-
+require_once 'todo.php'; // エンドポイントの処理を記述したファイルを読み込み
 // レスポンスのヘッダーを設定
 // JSON形式で返すためのヘッダー
 header("Content-Type: application/json");
@@ -16,11 +16,15 @@ global $pdo;
 $routes = [
     'GET' => [
         '#^/todos$#' => 'handleGetTodos',  // Match only `/todos` with no query params or other path
+        // todesのidを取得するエンドポイント
+        '#^/todos/(\d+)$#' => 'handleGetTodosbyId',
+        // healthエンドポイントを追加
         '#^/health$#' => 'handleHealthCheck',
-        // TODO: 他のエンドポイントを追加
     ],
     'POST' => [
         // TODO: 他のエンドポイントを追加
+        '#^/todos$#' => 'handlePostTodos',
+
     ],
     'PUT' => [
         // TODO: 他のエンドポイントを追加
@@ -30,6 +34,7 @@ $routes = [
     ]
 ];
 
+// ルーティング処理
 if (isset($routes[$method])) {
     foreach ($routes[$method] as $pattern => $handler) {
         if (preg_match($pattern, $requestUri, $matches)) {
@@ -39,7 +44,7 @@ if (isset($routes[$method])) {
         }
     }
 }
-
+// ルーティングが見つからない場合は404エラーを返す
 http_response_code(404);
 echo json_encode(['error' => 'Not Found']);
 exit;
@@ -70,33 +75,6 @@ function handleHealthCheck(PDO $pdo): void
         echo json_encode([
             'status' => 'error',
             'message' => 'Database connection failed',
-            'error' => $e->getMessage()
-        ]);
-    }
-    exit;
-}
-
-/**
- * `/todos` エンドポイントを処理します。
- *
- * @param PDO $pdo データベース接続のためのPDOインスタンス
- * @return void
- */
-function handleGetTodos(PDO $pdo): void
-{
-    try {
-        // データベースからTodoリストを取得
-        $stmt = $pdo->query("SELECT todos.id, todos.title, statuses.name FROM todos JOIN statuses ON todos.status_id = statuses.id;");
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // レスポンスを返却
-        echo json_encode(['status' => 'ok', 'data' => $result]);
-    } catch (Exception $e) {
-        // クエリエラー時のレスポンス
-        http_response_code(500);
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Failed to get todos',
             'error' => $e->getMessage()
         ]);
     }
